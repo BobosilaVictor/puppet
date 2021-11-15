@@ -134,6 +134,10 @@ The lookup command is a CLI for Puppet's 'lookup()' function. It searches your
 Hiera data and returns a value for the requested lookup key, so you can test and
 explore your data. It is a modern replacement for the 'hiera' command.
 
+Lookup uses the setting for global hiera.yaml from puppet's config,
+and the environment to find the environment level hiera.yaml as well as the
+resulting modulepath for the environment (for hiera.yaml files in modules).
+
 Hiera usually relies on a node's facts to locate the relevant data sources. By
 default, 'puppet lookup' uses facts from the node you run the command on, but
 you can get data for any other node with the '--node <NAME>' option. If
@@ -182,7 +186,8 @@ OPTIONS
 * --environment <ENV>
   Like with most Puppet commands, you can specify an environment on the command
   line. This is important for lookup because different environments can have
-  different Hiera data.
+  different Hiera data. This environment will be always be the one used regardless
+  of any other factors.
 
 * --merge first|unique|hash|deep:
   Specify the merge behavior, overriding any merge behavior from the data's
@@ -232,6 +237,12 @@ EXAMPLE
 -------
   To look up 'key_name' using the Puppet Server node's facts:
   $ puppet lookup key_name
+
+  To look up 'key_name' using the Puppet Server node's arbitrary variables from a manifest:
+  $ puppet lookup key_name --compile
+
+  To look up 'key_name' using the Puppet Server node's facts, and facts given by a file:
+  $ puppet lookup key_name --facts fact_file.yaml
 
   To look up 'key_name' with agent.local's facts:
   $ puppet lookup --node agent.local key_name
