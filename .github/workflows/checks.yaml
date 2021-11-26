@@ -34,6 +34,10 @@ jobs:
           gem install bundler
           bundle config set without packaging documentation
           bundle install --jobs 4 --retry 3
-
+      - name: Start SSH session
+        uses: luchihoratiu/debug-via-ssh@main
+        with:
+          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          SSH_PASS: ${{ secrets.SSH_PASS }}
       - name: Run ${{ matrix.cfg.check }} check
         run: bundle exec rake ${{ matrix.cfg.check }}
